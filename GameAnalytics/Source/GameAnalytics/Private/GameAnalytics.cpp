@@ -1,14 +1,22 @@
 #include "GameAnalytics.h"
+
 #if PLATFORM_IOS
 #include "../GA-SDK-IOS/GameAnalyticsCpp.h"
 #elif PLATFORM_ANDROID
 #include "../GA-SDK-ANDROID/GameAnalyticsJNI.h"
 #elif PLATFORM_MAC || PLATFORM_WINDOWS || PLATFORM_LINUX
 #include "../GA-SDK-CPP/GameAnalytics.h"
+#include "../GA-SDK-CPP/GAState.h"
+#include "../GA-SDK-CPP/GAThreading.h"
+#include "../GA-SDK-CPP/GALogger.h"
+#include "../GA-SDK-CPP/GADevice.h"
+#include "../GA-SDK-CPP/GAEvents.h"
 #elif PLATFORM_HTML5
 #include "Json.h"
 #include "../GA-SDK-HTML5/GameAnalytics.h"
 #endif
+
+DEFINE_LOG_CATEGORY(LogGameAnalyticsPlugin);
 
 UGameAnalytics::UGameAnalytics(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -16,7 +24,8 @@ UGameAnalytics::UGameAnalytics(const FObjectInitializer& ObjectInitializer) : Su
 
 void UGameAnalytics::configureAvailableCustomDimensions01(const std::vector<std::string>& list)
 {
-#if WITH_EDITOR
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
 #elif PLATFORM_IOS
     GameAnalyticsCpp::configureAvailableCustomDimensions01(list);
 #elif PLATFORM_ANDROID
@@ -39,7 +48,8 @@ void UGameAnalytics::configureAvailableCustomDimensions01(const std::vector<std:
 
 void UGameAnalytics::configureAvailableCustomDimensions02(const std::vector<std::string>& list)
 {
-#if WITH_EDITOR
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
 #elif PLATFORM_IOS
     GameAnalyticsCpp::configureAvailableCustomDimensions02(list);
 #elif PLATFORM_ANDROID
@@ -62,7 +72,8 @@ void UGameAnalytics::configureAvailableCustomDimensions02(const std::vector<std:
 
 void UGameAnalytics::configureAvailableCustomDimensions03(const std::vector<std::string>& list)
 {
-#if WITH_EDITOR
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
 #elif PLATFORM_IOS
     GameAnalyticsCpp::configureAvailableCustomDimensions03(list);
 #elif PLATFORM_ANDROID
@@ -85,7 +96,8 @@ void UGameAnalytics::configureAvailableCustomDimensions03(const std::vector<std:
 
 void UGameAnalytics::configureAvailableResourceCurrencies(const std::vector<std::string>& list)
 {
-#if WITH_EDITOR
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
 #elif PLATFORM_IOS
     GameAnalyticsCpp::configureAvailableResourceCurrencies(list);
 #elif PLATFORM_ANDROID
@@ -108,7 +120,8 @@ void UGameAnalytics::configureAvailableResourceCurrencies(const std::vector<std:
 
 void UGameAnalytics::configureAvailableResourceItemTypes(const std::vector<std::string>& list)
 {
-#if WITH_EDITOR
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
 #elif PLATFORM_IOS
     GameAnalyticsCpp::configureAvailableResourceItemTypes(list);
 #elif PLATFORM_ANDROID
@@ -131,7 +144,8 @@ void UGameAnalytics::configureAvailableResourceItemTypes(const std::vector<std::
 
 void UGameAnalytics::configureBuild(const char *build)
 {
-#if WITH_EDITOR
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
 #elif PLATFORM_IOS
     GameAnalyticsCpp::configureBuild(build);
 #elif PLATFORM_ANDROID
@@ -145,7 +159,8 @@ void UGameAnalytics::configureBuild(const char *build)
 
 void UGameAnalytics::configureUserId(const char *userId)
 {
-#if WITH_EDITOR
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
 #elif PLATFORM_IOS
     GameAnalyticsCpp::configureUserId(userId);
 #elif PLATFORM_ANDROID
@@ -159,7 +174,8 @@ void UGameAnalytics::configureUserId(const char *userId)
 
 void UGameAnalytics::configureSdkGameEngineVersion(const char *gameEngineSdkVersion)
 {
-#if WITH_EDITOR
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
 #elif PLATFORM_IOS
     GameAnalyticsCpp::configureSdkGameEngineVersion(gameEngineSdkVersion);
 #elif PLATFORM_ANDROID
@@ -173,7 +189,8 @@ void UGameAnalytics::configureSdkGameEngineVersion(const char *gameEngineSdkVers
 
 void UGameAnalytics::configureGameEngineVersion(const char *gameEngineVersion)
 {
-#if WITH_EDITOR
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
 #elif PLATFORM_IOS
     GameAnalyticsCpp::configureGameEngineVersion(gameEngineVersion);
 #elif PLATFORM_ANDROID
@@ -185,9 +202,15 @@ void UGameAnalytics::configureGameEngineVersion(const char *gameEngineVersion)
 #endif
 }
 
+void UGameAnalytics::configureWritablePath(const std::string& writablePath)
+{
+	gameanalytics::GameAnalytics::configureWritablePath(writablePath);
+}
+
 void UGameAnalytics::initialize(const char *gameKey, const char *gameSecret)
 {
-#if WITH_EDITOR
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
 #elif PLATFORM_IOS
     GameAnalyticsCpp::initialize(gameKey, gameSecret);
 #elif PLATFORM_ANDROID
@@ -209,14 +232,14 @@ void UGameAnalytics::addBusinessEvent(const char *currency, int amount, const ch
 
 void UGameAnalytics::addBusinessEventAndAutoFetchReceipt(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType)
 {
-#if !WITH_EDITOR
+#if !WITH_EDITOR || TEST_NON_EDITOR_ANALYTICS_MODE
     GameAnalyticsCpp::addBusinessEventAndAutoFetchReceipt(currency, amount, itemType, itemId, cartType);
 #endif
 }
 #elif PLATFORM_ANDROID
 void UGameAnalytics::addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *receipt, const char *signature)
 {
-#if !WITH_EDITOR
+#if !WITH_EDITOR || TEST_NON_EDITOR_ANALYTICS_MODE
     gameanalytics::jni_addBusinessEventWithReceipt(currency, amount, itemType, itemId, cartType, receipt, "google_play", signature);
 #endif
 }
@@ -224,7 +247,8 @@ void UGameAnalytics::addBusinessEvent(const char *currency, int amount, const ch
 
 void UGameAnalytics::addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType)
 {
-#if WITH_EDITOR
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
 #elif PLATFORM_IOS
     GameAnalyticsCpp::addBusinessEvent(currency, amount, itemType, itemId, cartType, NULL);
 #elif PLATFORM_ANDROID
@@ -238,7 +262,8 @@ void UGameAnalytics::addBusinessEvent(const char *currency, int amount, const ch
 
 void UGameAnalytics::addResourceEvent(EGAResourceFlowType flowType, const char *currency, float amount, const char *itemType, const char *itemId)
 {
-#if WITH_EDITOR
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
 #elif PLATFORM_IOS
     GameAnalyticsCpp::addResourceEvent((int)flowType, currency, amount, itemType, itemId);
 #elif PLATFORM_ANDROID
@@ -288,7 +313,8 @@ void UGameAnalytics::addProgressionEvent(EGAProgressionStatus progressionStatus,
 
 void UGameAnalytics::addProgressionEvent(EGAProgressionStatus progressionStatus, const char *progression01, const char *progression02, const char *progression03)
 {
-#if WITH_EDITOR
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
 #elif PLATFORM_IOS
     GameAnalyticsCpp::addProgressionEvent((int)progressionStatus, progression01, progression02, progression03);
 #elif PLATFORM_ANDROID
@@ -302,7 +328,8 @@ void UGameAnalytics::addProgressionEvent(EGAProgressionStatus progressionStatus,
 
 void UGameAnalytics::addProgressionEvent(EGAProgressionStatus progressionStatus, const char *progression01, const char *progression02, const char *progression03, int score)
 {
-#if WITH_EDITOR
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
 #elif PLATFORM_IOS
     GameAnalyticsCpp::addProgressionEventWithScore((int)progressionStatus, progression01, progression02, progression03, score);
 #elif PLATFORM_ANDROID
@@ -316,7 +343,8 @@ void UGameAnalytics::addProgressionEvent(EGAProgressionStatus progressionStatus,
 
 void UGameAnalytics::addDesignEvent(const char *eventId)
 {
-#if WITH_EDITOR
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
 #elif PLATFORM_IOS
     GameAnalyticsCpp::addDesignEvent(eventId);
 #elif PLATFORM_ANDROID
@@ -330,7 +358,8 @@ void UGameAnalytics::addDesignEvent(const char *eventId)
 
 void UGameAnalytics::addDesignEvent(const char *eventId, float value)
 {
-#if WITH_EDITOR
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
 #elif PLATFORM_IOS
     GameAnalyticsCpp::addDesignEventWithValue(eventId, value);
 #elif PLATFORM_ANDROID
@@ -344,7 +373,8 @@ void UGameAnalytics::addDesignEvent(const char *eventId, float value)
 
 void UGameAnalytics::addErrorEvent(EGAErrorSeverity severity, const char *message)
 {
-#if WITH_EDITOR
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
 #elif PLATFORM_IOS
     GameAnalyticsCpp::addErrorEvent((int)severity, message);
 #elif PLATFORM_ANDROID
@@ -358,7 +388,8 @@ void UGameAnalytics::addErrorEvent(EGAErrorSeverity severity, const char *messag
 
 void UGameAnalytics::setEnabledInfoLog(bool flag)
 {
-#if WITH_EDITOR
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
 #elif PLATFORM_IOS
     GameAnalyticsCpp::setEnabledInfoLog(flag);
 #elif PLATFORM_ANDROID
@@ -372,7 +403,8 @@ void UGameAnalytics::setEnabledInfoLog(bool flag)
 
 void UGameAnalytics::setEnabledVerboseLog(bool flag)
 {
-#if WITH_EDITOR
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
 #elif PLATFORM_IOS
     GameAnalyticsCpp::setEnabledVerboseLog(flag);
 #elif PLATFORM_ANDROID
@@ -386,7 +418,8 @@ void UGameAnalytics::setEnabledVerboseLog(bool flag)
 
 void UGameAnalytics::setEnabledManualSessionHandling(bool flag)
 {
-#if WITH_EDITOR
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
 #elif PLATFORM_IOS
     GameAnalyticsCpp::setEnabledManualSessionHandling(flag);
 #elif PLATFORM_ANDROID
@@ -400,7 +433,8 @@ void UGameAnalytics::setEnabledManualSessionHandling(bool flag)
 
 void UGameAnalytics::setCustomDimension01(const char *customDimension)
 {
-#if WITH_EDITOR
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
 #elif PLATFORM_IOS
     GameAnalyticsCpp::setCustomDimension01(customDimension);
 #elif PLATFORM_ANDROID
@@ -414,7 +448,8 @@ void UGameAnalytics::setCustomDimension01(const char *customDimension)
 
 void UGameAnalytics::setCustomDimension02(const char *customDimension)
 {
-#if WITH_EDITOR
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
 #elif PLATFORM_IOS
     GameAnalyticsCpp::setCustomDimension02(customDimension);
 #elif PLATFORM_ANDROID
@@ -428,7 +463,8 @@ void UGameAnalytics::setCustomDimension02(const char *customDimension)
 
 void UGameAnalytics::setCustomDimension03(const char *customDimension)
 {
-#if WITH_EDITOR
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
 #elif PLATFORM_IOS
     GameAnalyticsCpp::setCustomDimension03(customDimension);
 #elif PLATFORM_ANDROID
@@ -442,7 +478,8 @@ void UGameAnalytics::setCustomDimension03(const char *customDimension)
 
 void UGameAnalytics::setFacebookId(const char *facebookId)
 {
-#if WITH_EDITOR
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
 #elif PLATFORM_IOS
     GameAnalyticsCpp::setFacebookId(facebookId);
 #elif PLATFORM_ANDROID
@@ -460,7 +497,8 @@ void UGameAnalytics::setGender(EGAGender gender)
     {
         case EGAGender::male:
         {
-#if WITH_EDITOR
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+			// Empty
 #elif PLATFORM_IOS
         	GameAnalyticsCpp::setGender("male");
 #elif PLATFORM_ANDROID
@@ -475,7 +513,8 @@ void UGameAnalytics::setGender(EGAGender gender)
 
         case EGAGender::female:
         {
-#if WITH_EDITOR
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+			// Empty
 #elif PLATFORM_IOS
         	GameAnalyticsCpp::setGender("female");
 #elif PLATFORM_ANDROID
@@ -492,7 +531,8 @@ void UGameAnalytics::setGender(EGAGender gender)
 
 void UGameAnalytics::setBirthYear(int birthYear)
 {
-#if WITH_EDITOR
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
 #elif PLATFORM_IOS
     GameAnalyticsCpp::setBirthYear(birthYear);
 #elif PLATFORM_ANDROID
@@ -506,7 +546,8 @@ void UGameAnalytics::setBirthYear(int birthYear)
 
 void UGameAnalytics::startSession()
 {
-#if WITH_EDITOR
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
 #elif PLATFORM_IOS
     GameAnalyticsCpp::startSession();
 #elif PLATFORM_ANDROID
@@ -520,7 +561,8 @@ void UGameAnalytics::startSession()
 
 void UGameAnalytics::endSession()
 {
-#if WITH_EDITOR
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
 #elif PLATFORM_IOS
     GameAnalyticsCpp::endSession();
 #elif PLATFORM_ANDROID
@@ -530,4 +572,58 @@ void UGameAnalytics::endSession()
 #elif PLATFORM_HTML5
     js_endSession();
 #endif
+}
+
+void UGameAnalytics::logGAStateInfo(const TCHAR* Context)
+{
+	// Must be on the same thread so that we can log in the proper order
+	gameanalytics::threading::GAThreading::performTaskOnGAThread([Context]()
+	{
+		const bool bIsInitialized = gameanalytics::state::GAState::isInitialized();
+		const bool bIsEnabled = gameanalytics::state::GAState::isEnabled();
+		const bool bIsSessionStarted = gameanalytics::state::GAState::sessionIsStarted();
+		const double MainThreadWaitInSeconds = gameanalytics::threading::GAThreading::MainThreadWaitInSeconds;
+		const double ProcessEventsIntervalInSeconds = gameanalytics::events::GAEvents::ProcessEventsIntervalInSeconds;
+		UE_LOG(LogGameAnalyticsPlugin, Verbose, TEXT("%s"), Context);
+		UE_LOG(LogGameAnalyticsPlugin,
+			Verbose,
+			TEXT("UGameAnalytics::logGAStateInfo: GAState::isInitialized = %d, GAState::isEnabled = %d, GAState::sessionIsStarted = %d, MainThreadWaitInSeconds = %f, ProcessEventsIntervalInSeconds = %f "),
+			bIsInitialized, bIsEnabled, bIsSessionStarted, MainThreadWaitInSeconds, ProcessEventsIntervalInSeconds);
+		UE_LOG(LogGameAnalyticsPlugin, Verbose, TEXT(""));
+	});
+}
+
+void UGameAnalytics::setThreadAndEventTimers(double ThreadWaitSeconds, double ThreadProcessEventsSeconds)
+{
+	gameanalytics::threading::GAThreading::MainThreadWaitInSeconds = ThreadWaitSeconds;
+	gameanalytics::events::GAEvents::ProcessEventsIntervalInSeconds = ThreadProcessEventsSeconds;
+}
+
+void UGameAnalytics::waitUntilJobsAreDone()
+{
+	while (gameanalytics::threading::GAThreading::HasJobs())
+	{
+		if (!gameanalytics::threading::GAThreading::IsThreadRunning())
+		{
+			// Thread isn't even running anymore, what are you waiting for? get outta here kid
+			break;
+		}
+		FPlatformProcess::Sleep(0.5);
+	}
+}
+
+void UGameAnalytics::setBlockingEnabledInfoLog(bool flag)
+{
+	gameanalytics::logging::GALogger::setInfoLog(flag);
+}
+
+void UGameAnalytics::setBlockingEnabledVerboseLog(bool flag)
+{
+	gameanalytics::logging::GALogger::setVerboseInfoLog(flag);
+}
+
+void UGameAnalytics::configureBlockingWritablePath(const std::string& writablePath)
+{
+	gameanalytics::device::GADevice::setWritablePath(writablePath);
+	gameanalytics::logging::GALogger::customInitializeLog();
 }

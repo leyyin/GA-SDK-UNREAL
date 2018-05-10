@@ -214,15 +214,19 @@ FAnalyticsProviderGameAnalytics::~FAnalyticsProviderGameAnalytics()
 
 bool FAnalyticsProviderGameAnalytics::StartSession(const TArray<FAnalyticsEventAttribute>& Attributes)
 {
+	UGameAnalytics::logGAStateInfo(TEXT("FAnalyticsProviderGameAnalytics::StartSession"));
     if(!bHasSessionStarted)
     {
+#if WITH_EDITOR && TEST_NON_EDITOR_ANALYTICS_MODE
+		UGameAnalytics::setThreadAndEventTimers(0.1, 0.05);
+#endif
         ProjectSettings = FAnalyticsGameAnalytics::LoadProjectSettings();
 
 #if PLATFORM_MAC || PLATFORM_WINDOWS || PLATFORM_LINUX
 #if ENGINE_MAJOR_VERSION >= 4 && ENGINE_MINOR_VERSION >= 18
-        gameanalytics::GameAnalytics::configureWritablePath(TCHAR_TO_ANSI(*FPaths::ProjectSavedDir()));
+        UGameAnalytics::configureWritablePath(TCHAR_TO_ANSI(*FPaths::ProjectSavedDir()));
 #else
-        gameanalytics::GameAnalytics::configureWritablePath(TCHAR_TO_ANSI(*FPaths::GameSavedDir()));
+		UGameAnalytics::configureWritablePath(TCHAR_TO_ANSI(*FPaths::GameSavedDir()));
 #endif
 #endif
 
@@ -310,7 +314,7 @@ bool FAnalyticsProviderGameAnalytics::StartSession(const TArray<FAnalyticsEventA
 
         if(!ProjectSettings.UseCustomId)
         {
-            ////// Initialize
+            ////// Initialize (also calls startNewSession)
 #if PLATFORM_IOS
             UGameAnalytics::initialize(TCHAR_TO_ANSI(*ProjectSettings.IosGameKey), TCHAR_TO_ANSI(*ProjectSettings.IosSecretKey));
 #elif PLATFORM_ANDROID
@@ -324,6 +328,7 @@ bool FAnalyticsProviderGameAnalytics::StartSession(const TArray<FAnalyticsEventA
 #elif PLATFORM_HTML5
             UGameAnalytics::initialize(TCHAR_TO_ANSI(*ProjectSettings.Html5GameKey), TCHAR_TO_ANSI(*ProjectSettings.Html5SecretKey));
 #endif
+			UGameAnalytics::logGAStateInfo(TEXT("FAnalyticsProviderGameAnalytics::StartSession AFTER UGameAnalytics::initialize"));
         }
         else
         {
@@ -332,7 +337,7 @@ bool FAnalyticsProviderGameAnalytics::StartSession(const TArray<FAnalyticsEventA
 
         bHasSessionStarted = true;
     }
-    else if(ProjectSettings.UseManualSessionHandling)
+    else if (ProjectSettings.UseManualSessionHandling)
     {
         UGameAnalytics::startSession();
     }
@@ -342,6 +347,7 @@ bool FAnalyticsProviderGameAnalytics::StartSession(const TArray<FAnalyticsEventA
 
 void FAnalyticsProviderGameAnalytics::EndSession()
 {
+	UGameAnalytics::logGAStateInfo(TEXT("FAnalyticsProviderGameAnalytics::EndSession"));
 	if (bHasSessionStarted)
 	{
 		if(ProjectSettings.UseManualSessionHandling)
@@ -359,6 +365,10 @@ void FAnalyticsProviderGameAnalytics::EndSession()
 #endif
 		}
 	}
+
+#if WITH_EDITOR && TEST_NON_EDITOR_ANALYTICS_MODE
+	UGameAnalytics::waitUntilJobsAreDone();
+#endif
 }
 
 void FAnalyticsProviderGameAnalytics::FlushEvents()

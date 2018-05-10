@@ -13,6 +13,9 @@
 #include "Object.h"
 #include "GameAnalytics.generated.h"
 
+
+DECLARE_LOG_CATEGORY_EXTERN(LogGameAnalyticsPlugin, All, All);
+
 UENUM()
 enum class EGAResourceFlowType : uint8
 {
@@ -49,6 +52,7 @@ enum class EGAGender : uint8
     female = 2
 };
 
+
 UCLASS()
 class GAMEANALYTICS_API UGameAnalytics : public UObject 
 {
@@ -67,6 +71,7 @@ public:
 	static void configureUserId(const char *userId);
 	static void configureSdkGameEngineVersion(const char *gameEngineSdkVersion);
 	static void configureGameEngineVersion(const char *gameEngineVersion);
+	static void configureWritablePath(const std::string& writablePath);
 	static void initialize(const char *gameKey, const char *gameSecret);
 	    
 #if PLATFORM_IOS
@@ -99,4 +104,13 @@ public:
             
     static void startSession();
     static void endSession();
+
+	// Own methods
+	static void logGAStateInfo(const TCHAR* Context);
+
+	static void setThreadAndEventTimers(double ThreadWaitSeconds, double ThreadProcessEventsSeconds);
+	static void waitUntilJobsAreDone(); // obviously blocking
+	static void setBlockingEnabledInfoLog(bool flag);
+	static void setBlockingEnabledVerboseLog(bool flag);
+	static void configureBlockingWritablePath(const std::string& writablePath);
 };
