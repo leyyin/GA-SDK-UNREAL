@@ -17,7 +17,9 @@
 
 DEFINE_LOG_CATEGORY_STATIC(LogGameAnalyticsAnalytics, Display, All);
 
-IMPLEMENT_MODULE( FAnalyticsGameAnalytics, GameAnalytics )
+IMPLEMENT_MODULE(FAnalyticsGameAnalytics, GameAnalytics)
+
+FGameAnalyticsBuildOverride FAnalyticsGameAnalytics::BuildOverride;
 
 void FAnalyticsGameAnalytics::StartupModule()
 {
@@ -50,56 +52,60 @@ FAnalyticsGameAnalytics::FGameAnalyticsProjectSettings FAnalyticsGameAnalytics::
 {
 	FGameAnalyticsProjectSettings Settings;
 
-	if (!GConfig) return Settings;
+	if (!GConfig)
+	{
+		return Settings;
+	}
 
-	if(!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("AndroidGameKey"), Settings.AndroidGameKey, GetIniName()))
+	const bool bUseBuildOverride = BuildOverride.IsBound();
+	if (!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("AndroidGameKey"), Settings.AndroidGameKey, GetIniName()))
     {
         Settings.AndroidGameKey = "";
     }
-	if(!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("AndroidSecretKey"), Settings.AndroidSecretKey, GetIniName()))
+	if (!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("AndroidSecretKey"), Settings.AndroidSecretKey, GetIniName()))
     {
         Settings.AndroidSecretKey = "";
     }
-	if(!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("AndroidBuild"), Settings.AndroidBuild, GetIniName()))
+	if (!bUseBuildOverride && !GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("AndroidBuild"), Settings.AndroidBuild, GetIniName()))
     {
         Settings.AndroidBuild = "0.1";
     }
 
-	if(!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("IosGameKey"), Settings.IosGameKey, GetIniName()))
+	if (!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("IosGameKey"), Settings.IosGameKey, GetIniName()))
     {
         Settings.IosGameKey = "";
     }
-	if(!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("IosSecretKey"), Settings.IosSecretKey, GetIniName()))
+	if (!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("IosSecretKey"), Settings.IosSecretKey, GetIniName()))
     {
         Settings.IosSecretKey = "";
     }
-	if(!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("IosBuild"), Settings.IosBuild, GetIniName()))
+	if (!bUseBuildOverride && !GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("IosBuild"), Settings.IosBuild, GetIniName()))
     {
         Settings.IosBuild = "0.1";
     }
 
-    if(!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("MacGameKey"), Settings.MacGameKey, GetIniName()))
+    if (!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("MacGameKey"), Settings.MacGameKey, GetIniName()))
     {
         Settings.MacGameKey = "";
     }
-    if(!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("MacSecretKey"), Settings.MacSecretKey, GetIniName()))
+    if (!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("MacSecretKey"), Settings.MacSecretKey, GetIniName()))
     {
         Settings.MacSecretKey = "";
     }
-    if(!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("MacBuild"), Settings.MacBuild, GetIniName()))
+    if (!bUseBuildOverride && !GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("MacBuild"), Settings.MacBuild, GetIniName()))
     {
         Settings.MacBuild = "0.1";
     }
 
-	if(!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("WindowsGameKey"), Settings.WindowsGameKey, GetIniName()))
+	if (!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("WindowsGameKey"), Settings.WindowsGameKey, GetIniName()))
     {
         Settings.WindowsGameKey = "";
     }
-    if(!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("WindowsSecretKey"), Settings.WindowsSecretKey, GetIniName()))
+    if (!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("WindowsSecretKey"), Settings.WindowsSecretKey, GetIniName()))
     {
         Settings.WindowsSecretKey = "";
     }
-    if(!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("WindowsBuild"), Settings.WindowsBuild, GetIniName()))
+    if (!bUseBuildOverride && !GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("WindowsBuild"), Settings.WindowsBuild, GetIniName()))
     {
         Settings.WindowsBuild = "0.1";
     }
@@ -112,7 +118,7 @@ FAnalyticsGameAnalytics::FGameAnalyticsProjectSettings FAnalyticsGameAnalytics::
     {
         Settings.LinuxSecretKey = "";
     }
-    if (!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("LinuxBuild"), Settings.LinuxBuild, GetIniName()))
+    if (!bUseBuildOverride && !GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("LinuxBuild"), Settings.LinuxBuild, GetIniName()))
     {
         Settings.LinuxBuild = "0.1";
     }
@@ -125,24 +131,36 @@ FAnalyticsGameAnalytics::FGameAnalyticsProjectSettings FAnalyticsGameAnalytics::
     {
         Settings.Html5SecretKey = "";
     }
-    if (!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("Html5Build"), Settings.Html5Build, GetIniName()))
+    if (!bUseBuildOverride && !GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("Html5Build"), Settings.Html5Build, GetIniName()))
     {
         Settings.Html5Build = "0.1";
     }
 
-    if(!GConfig->GetBool(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("UseCustomId"), Settings.UseCustomId, GetIniName()))
+	// Overridden by the game, same version for everyone
+	if (bUseBuildOverride)
+	{
+		const FString& BuildVersion = BuildOverride.Execute();
+		Settings.AndroidBuild = BuildVersion;
+		Settings.IosBuild = BuildVersion;
+		Settings.MacBuild = BuildVersion;
+		Settings.WindowsBuild = BuildVersion;
+		Settings.LinuxBuild = BuildVersion;
+		Settings.Html5Build = BuildVersion;
+	}
+
+    if (!GConfig->GetBool(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("UseCustomId"), Settings.UseCustomId, GetIniName()))
     {
         Settings.UseCustomId = false;
     }
-    if(!GConfig->GetBool(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("UseManualSessionHandling"), Settings.UseManualSessionHandling, GetIniName()))
+    if (!GConfig->GetBool(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("UseManualSessionHandling"), Settings.UseManualSessionHandling, GetIniName()))
     {
         Settings.UseManualSessionHandling = false;
     }
-	if(!GConfig->GetBool(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("InfoLogBuild"), Settings.InfoLogBuild, GetIniName()))
+	if (!GConfig->GetBool(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("InfoLogBuild"), Settings.InfoLogBuild, GetIniName()))
     {
         Settings.InfoLogBuild = true;
     }
-	if(!GConfig->GetBool(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("VerboseLogBuild"), Settings.VerboseLogBuild, GetIniName()))
+	if (!GConfig->GetBool(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("VerboseLogBuild"), Settings.VerboseLogBuild, GetIniName()))
     {
         Settings.VerboseLogBuild = false;
     }
@@ -204,7 +222,9 @@ FAnalyticsProviderGameAnalytics::~FAnalyticsProviderGameAnalytics()
 {
 	if (bHasSessionStarted)
 	{
-#if PLATFORM_MAC || PLATFORM_WINDOWS || PLATFORM_LINUX
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+		// Empty
+#elif PLATFORM_MAC || PLATFORM_WINDOWS || PLATFORM_LINUX
         gameanalytics::GameAnalytics::onQuit();
 #else
         EndSession();
@@ -217,6 +237,7 @@ bool FAnalyticsProviderGameAnalytics::StartSession(const TArray<FAnalyticsEventA
 	UGameAnalytics::logGAStateInfo(TEXT("FAnalyticsProviderGameAnalytics::StartSession"));
     if(!bHasSessionStarted)
     {
+		UE_LOG(LogGameAnalyticsPlugin, Verbose, TEXT("TEST_NON_EDITOR_ANALYTICS_MODE = %d"), TEST_NON_EDITOR_ANALYTICS_MODE);
 #if WITH_EDITOR && TEST_NON_EDITOR_ANALYTICS_MODE
 		UGameAnalytics::setThreadAndEventTimers(0.1, 0.05);
 #endif
@@ -367,6 +388,7 @@ void FAnalyticsProviderGameAnalytics::EndSession()
 	}
 
 #if WITH_EDITOR && TEST_NON_EDITOR_ANALYTICS_MODE
+	UE_LOG(LogGameAnalyticsPlugin, Verbose, TEXT("waitUntilJobsAreDone"));
 	UGameAnalytics::waitUntilJobsAreDone();
 #endif
 }

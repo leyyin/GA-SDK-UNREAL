@@ -23,7 +23,8 @@ namespace gameanalytics
             static void addSessionStartEvent();
             static void addSessionEndEvent();
 
-			static double ProcessEventsIntervalInSeconds;
+            static double GetEventsPollIntervalSeconds();
+            static void SetEventsPollIntervalSeconds(double NewInterval);
         };
     }
 }

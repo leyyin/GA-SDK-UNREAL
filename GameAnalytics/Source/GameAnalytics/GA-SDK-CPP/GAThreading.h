@@ -30,7 +30,8 @@ namespace gameanalytics
 
 			static bool IsThreadRunning();
 
-			static double MainThreadWaitInSeconds;
+			static double GetThreadWaitSeconds();
+			static void SetThreadWaitSeconds(double NewInterval);
         };
     }
 }

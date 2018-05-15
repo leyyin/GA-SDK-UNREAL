@@ -17,8 +17,8 @@ namespace UnrealBuildTool.Rules
             var GameAnalyticsPath = Path.GetFullPath(Path.Combine(ModuleDirectory, "../ThirdParty/" ));
             var libPath = Path.Combine(GameAnalyticsPath, "lib");
 
-            // Test analytics in editor mode? TODO make it work properly
-            PublicDefinitions.Add("TEST_NON_EDITOR_ANALYTICS_MODE=1");
+            // Test analytics in editor mode
+            PublicDefinitions.Add("TEST_NON_EDITOR_ANALYTICS_MODE=0");
 
             switch (Target.Platform)
             {

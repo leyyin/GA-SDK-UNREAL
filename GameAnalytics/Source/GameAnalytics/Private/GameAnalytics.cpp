@@ -576,14 +576,17 @@ void UGameAnalytics::endSession()
 
 void UGameAnalytics::logGAStateInfo(const TCHAR* Context)
 {
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
+#else
 	// Must be on the same thread so that we can log in the proper order
 	gameanalytics::threading::GAThreading::performTaskOnGAThread([Context]()
 	{
 		const bool bIsInitialized = gameanalytics::state::GAState::isInitialized();
 		const bool bIsEnabled = gameanalytics::state::GAState::isEnabled();
 		const bool bIsSessionStarted = gameanalytics::state::GAState::sessionIsStarted();
-		const double MainThreadWaitInSeconds = gameanalytics::threading::GAThreading::MainThreadWaitInSeconds;
-		const double ProcessEventsIntervalInSeconds = gameanalytics::events::GAEvents::ProcessEventsIntervalInSeconds;
+		const double MainThreadWaitInSeconds = gameanalytics::threading::GAThreading::GetThreadWaitSeconds();
+		const double ProcessEventsIntervalInSeconds = gameanalytics::events::GAEvents::GetEventsPollIntervalSeconds();
 		UE_LOG(LogGameAnalyticsPlugin, Verbose, TEXT("%s"), Context);
 		UE_LOG(LogGameAnalyticsPlugin,
 			Verbose,
@@ -591,12 +594,13 @@ void UGameAnalytics::logGAStateInfo(const TCHAR* Context)
 			bIsInitialized, bIsEnabled, bIsSessionStarted, MainThreadWaitInSeconds, ProcessEventsIntervalInSeconds);
 		UE_LOG(LogGameAnalyticsPlugin, Verbose, TEXT(""));
 	});
+#endif
 }
 
 void UGameAnalytics::setThreadAndEventTimers(double ThreadWaitSeconds, double ThreadProcessEventsSeconds)
 {
-	gameanalytics::threading::GAThreading::MainThreadWaitInSeconds = ThreadWaitSeconds;
-	gameanalytics::events::GAEvents::ProcessEventsIntervalInSeconds = ThreadProcessEventsSeconds;
+	gameanalytics::threading::GAThreading::SetThreadWaitSeconds(ThreadWaitSeconds);
+	gameanalytics::events::GAEvents::SetEventsPollIntervalSeconds(ThreadProcessEventsSeconds);
 }
 
 void UGameAnalytics::waitUntilJobsAreDone()

@@ -10,12 +10,14 @@
 #include "Modules/ModuleManager.h"
 #endif
 
+DECLARE_DELEGATE_RetVal(const FString&, FGameAnalyticsBuildOverride);
+
 class IAnalyticsProvider;
 
 /**
  * The public interface to this module
  */
-class FAnalyticsGameAnalytics :
+class GAMEANALYTICS_API FAnalyticsGameAnalytics :
 	public IAnalyticsProviderModule
 {
 	/** Singleton for analytics */
@@ -25,6 +27,7 @@ class FAnalyticsGameAnalytics :
 	// Module functionality
 	//--------------------------------------------------------------------------
 public:
+
 	/**
 	 * Singleton-like access to this module's interface.  This is just for convenience!
 	 * Beware of calling this during the shutdown phase, though.  Your module might have been unloaded already.
@@ -33,7 +36,7 @@ public:
 	 */
 	static inline FAnalyticsGameAnalytics& Get()
 	{
-		return FModuleManager::LoadModuleChecked< FAnalyticsGameAnalytics >( "GameAnalytics" );
+		return FModuleManager::LoadModuleChecked<FAnalyticsGameAnalytics>("GameAnalytics");
 	}
 
 	//--------------------------------------------------------------------------
@@ -51,7 +54,9 @@ public:
 #else
     virtual TSharedPtr<IAnalyticsProvider> CreateAnalyticsProvider(const FAnalytics::FProviderConfigurationDelegate& GetConfigValue) const override;
 #endif
-	
+
+	static FGameAnalyticsBuildOverride& GetBuildOverride() { return BuildOverride;  }
+
 	struct FGameAnalyticsProjectSettings
 	{
 		FString IosGameKey;
@@ -95,4 +100,8 @@ private:
 	virtual void ShutdownModule() override;
     
     static FORCEINLINE FString GetIniName() { return FString::Printf(TEXT("%sDefaultEngine.ini"), *FPaths::SourceConfigDir()); }
+
+private:
+	// If this is set, it will use the value that was overridden for all platforms
+	static FGameAnalyticsBuildOverride BuildOverride;
 };
