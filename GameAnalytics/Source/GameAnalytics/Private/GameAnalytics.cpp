@@ -580,6 +580,7 @@ void UGameAnalytics::logGAStateInfo(const TCHAR* Context)
 	// Empty
 #else
 	// Must be on the same thread so that we can log in the proper order
+	UE_LOG(LogGameAnalyticsPlugin, Verbose, TEXT("Called UGameAnalytics::logGAStateInfo (outside of thread) with Context = `%s`"), Context);
 	gameanalytics::threading::GAThreading::performTaskOnGAThread([Context]()
 	{
 		const bool bIsInitialized = gameanalytics::state::GAState::isInitialized();
@@ -599,12 +600,19 @@ void UGameAnalytics::logGAStateInfo(const TCHAR* Context)
 
 void UGameAnalytics::setThreadAndEventTimers(double ThreadWaitSeconds, double ThreadProcessEventsSeconds)
 {
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
+#else
 	gameanalytics::threading::GAThreading::SetThreadWaitSeconds(ThreadWaitSeconds);
 	gameanalytics::events::GAEvents::SetEventsPollIntervalSeconds(ThreadProcessEventsSeconds);
+#endif
 }
 
 void UGameAnalytics::waitUntilJobsAreDone()
 {
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
+#else
 	while (gameanalytics::threading::GAThreading::HasJobs())
 	{
 		if (!gameanalytics::threading::GAThreading::IsThreadRunning())
@@ -614,20 +622,5 @@ void UGameAnalytics::waitUntilJobsAreDone()
 		}
 		FPlatformProcess::Sleep(0.5);
 	}
-}
-
-void UGameAnalytics::setBlockingEnabledInfoLog(bool flag)
-{
-	gameanalytics::logging::GALogger::setInfoLog(flag);
-}
-
-void UGameAnalytics::setBlockingEnabledVerboseLog(bool flag)
-{
-	gameanalytics::logging::GALogger::setVerboseInfoLog(flag);
-}
-
-void UGameAnalytics::configureBlockingWritablePath(const std::string& writablePath)
-{
-	gameanalytics::device::GADevice::setWritablePath(writablePath);
-	gameanalytics::logging::GALogger::customInitializeLog();
+#endif
 }

@@ -368,16 +368,18 @@ bool FAnalyticsProviderGameAnalytics::StartSession(const TArray<FAnalyticsEventA
 
 void FAnalyticsProviderGameAnalytics::EndSession()
 {
-	UGameAnalytics::logGAStateInfo(TEXT("FAnalyticsProviderGameAnalytics::EndSession"));
 	if (bHasSessionStarted)
 	{
+		UGameAnalytics::logGAStateInfo(TEXT("FAnalyticsProviderGameAnalytics::EndSession"));
 		if(ProjectSettings.UseManualSessionHandling)
 		{
 			UGameAnalytics::endSession();
 		}
 		else
 		{
-#if PLATFORM_MAC || PLATFORM_WINDOWS || PLATFORM_LINUX
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+			// Empty
+#elif PLATFORM_MAC || PLATFORM_WINDOWS || PLATFORM_LINUX
 			gameanalytics::GameAnalytics::onSuspend();
 #elif PLATFORM_HTML5
             js_onStop();

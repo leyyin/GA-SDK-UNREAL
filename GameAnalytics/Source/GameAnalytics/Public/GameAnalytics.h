@@ -110,7 +110,4 @@ public:
 
 	static void setThreadAndEventTimers(double ThreadWaitSeconds, double ThreadProcessEventsSeconds);
 	static void waitUntilJobsAreDone(); // obviously blocking
-	static void setBlockingEnabledInfoLog(bool flag);
-	static void setBlockingEnabledVerboseLog(bool flag);
-	static void configureBlockingWritablePath(const std::string& writablePath);
 };
