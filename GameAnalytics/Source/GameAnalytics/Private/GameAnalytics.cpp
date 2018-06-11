@@ -30,7 +30,18 @@ void UGameAnalytics::configureAvailableCustomDimensions01(const std::vector<std:
     GameAnalyticsCpp::configureAvailableCustomDimensions01(list);
 #elif PLATFORM_ANDROID
     gameanalytics::jni_configureAvailableCustomDimensions01(list);
-#elif PLATFORM_MAC || PLATFORM_WINDOWS || PLATFORM_LINUX
+#elif PLATFORM_LINUX
+    TArray<TSharedPtr<FJsonValue>> array;
+    for (std::string s : list)
+    {
+        TSharedRef<FJsonValueString> JsonValueString = MakeShareable(new FJsonValueString(ANSI_TO_TCHAR(s.c_str())));
+        array.Add(JsonValueString);
+    }
+    FString arrayString;
+    TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&arrayString);
+    FJsonSerializer::Serialize(array, Writer);
+    gameanalytics::GameAnalytics::configureAvailableCustomDimensions01(TCHAR_TO_ANSI(*arrayString));
+#elif PLATFORM_MAC || PLATFORM_WINDOWS
     gameanalytics::GameAnalytics::configureAvailableCustomDimensions01(list);
 #elif PLATFORM_HTML5
     TArray<TSharedPtr<FJsonValue>> array;
@@ -54,7 +65,18 @@ void UGameAnalytics::configureAvailableCustomDimensions02(const std::vector<std:
     GameAnalyticsCpp::configureAvailableCustomDimensions02(list);
 #elif PLATFORM_ANDROID
     gameanalytics::jni_configureAvailableCustomDimensions02(list);
-#elif PLATFORM_MAC || PLATFORM_WINDOWS || PLATFORM_LINUX
+#elif PLATFORM_LINUX
+    TArray<TSharedPtr<FJsonValue>> array;
+    for (std::string s : list)
+    {
+        TSharedRef<FJsonValueString> JsonValueString = MakeShareable(new FJsonValueString(ANSI_TO_TCHAR(s.c_str())));
+        array.Add(JsonValueString);
+    }
+    FString arrayString;
+    TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&arrayString);
+    FJsonSerializer::Serialize(array, Writer);
+    gameanalytics::GameAnalytics::configureAvailableCustomDimensions02(TCHAR_TO_ANSI(*arrayString));
+#elif PLATFORM_MAC || PLATFORM_WINDOWS
     gameanalytics::GameAnalytics::configureAvailableCustomDimensions02(list);
 #elif PLATFORM_HTML5
     TArray<TSharedPtr<FJsonValue>> array;
@@ -78,7 +100,18 @@ void UGameAnalytics::configureAvailableCustomDimensions03(const std::vector<std:
     GameAnalyticsCpp::configureAvailableCustomDimensions03(list);
 #elif PLATFORM_ANDROID
     gameanalytics::jni_configureAvailableCustomDimensions03(list);
-#elif PLATFORM_MAC || PLATFORM_WINDOWS || PLATFORM_LINUX
+#elif PLATFORM_LINUX
+    TArray<TSharedPtr<FJsonValue>> array;
+    for (std::string s : list)
+    {
+        TSharedRef<FJsonValueString> JsonValueString = MakeShareable(new FJsonValueString(ANSI_TO_TCHAR(s.c_str())));
+        array.Add(JsonValueString);
+    }
+    FString arrayString;
+    TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&arrayString);
+    FJsonSerializer::Serialize(array, Writer);
+    gameanalytics::GameAnalytics::configureAvailableCustomDimensions03(TCHAR_TO_ANSI(*arrayString));
+#elif PLATFORM_MAC || PLATFORM_WINDOWS
     gameanalytics::GameAnalytics::configureAvailableCustomDimensions03(list);
 #elif PLATFORM_HTML5
     TArray<TSharedPtr<FJsonValue>> array;
@@ -102,7 +135,18 @@ void UGameAnalytics::configureAvailableResourceCurrencies(const std::vector<std:
     GameAnalyticsCpp::configureAvailableResourceCurrencies(list);
 #elif PLATFORM_ANDROID
     gameanalytics::jni_configureAvailableResourceCurrencies(list);
-#elif PLATFORM_MAC || PLATFORM_WINDOWS || PLATFORM_LINUX
+#elif PLATFORM_LINUX
+    TArray<TSharedPtr<FJsonValue>> array;
+    for (std::string s : list)
+    {
+        TSharedRef<FJsonValueString> JsonValueString = MakeShareable(new FJsonValueString(ANSI_TO_TCHAR(s.c_str())));
+        array.Add(JsonValueString);
+    }
+    FString arrayString;
+    TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&arrayString);
+    FJsonSerializer::Serialize(array, Writer);
+    gameanalytics::GameAnalytics::configureAvailableResourceCurrencies(TCHAR_TO_ANSI(*arrayString));
+#elif PLATFORM_MAC || PLATFORM_WINDOWS
     gameanalytics::GameAnalytics::configureAvailableResourceCurrencies(list);
 #elif PLATFORM_HTML5
     TArray<TSharedPtr<FJsonValue>> array;
@@ -126,7 +170,18 @@ void UGameAnalytics::configureAvailableResourceItemTypes(const std::vector<std::
     GameAnalyticsCpp::configureAvailableResourceItemTypes(list);
 #elif PLATFORM_ANDROID
     gameanalytics::jni_configureAvailableResourceItemTypes(list);
-#elif PLATFORM_MAC || PLATFORM_WINDOWS || PLATFORM_LINUX
+#elif PLATFORM_LINUX
+    TArray<TSharedPtr<FJsonValue>> array;
+    for (std::string s : list)
+    {
+        TSharedRef<FJsonValueString> JsonValueString = MakeShareable(new FJsonValueString(ANSI_TO_TCHAR(s.c_str())));
+        array.Add(JsonValueString);
+    }
+    FString arrayString;
+    TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&arrayString);
+    FJsonSerializer::Serialize(array, Writer);
+    gameanalytics::GameAnalytics::configureAvailableResourceItemTypes(TCHAR_TO_ANSI(*arrayString));
+#elif PLATFORM_MAC || PLATFORM_WINDOWS
     gameanalytics::GameAnalytics::configureAvailableResourceItemTypes(list);
 #elif PLATFORM_HTML5
     TArray<TSharedPtr<FJsonValue>> array;
