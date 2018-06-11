@@ -204,7 +204,12 @@ void UGameAnalytics::configureGameEngineVersion(const char *gameEngineVersion)
 
 void UGameAnalytics::configureWritablePath(const std::string& writablePath)
 {
+#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+	// Empty
+
+#else
 	gameanalytics::GameAnalytics::configureWritablePath(writablePath);
+#endif
 }
 
 void UGameAnalytics::initialize(const char *gameKey, const char *gameSecret)
