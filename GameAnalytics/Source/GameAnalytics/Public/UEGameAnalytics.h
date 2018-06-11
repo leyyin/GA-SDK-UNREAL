@@ -17,7 +17,7 @@ class IAnalyticsProvider;
 /**
  * The public interface to this module
  */
-class FAnalyticsGameAnalytics :
+class GAMEANALYTICS_API FAnalyticsGameAnalytics :
     public IAnalyticsProviderModule
 {
     /** Singleton for analytics */

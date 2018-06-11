@@ -27,5 +27,5 @@ Windows:
 
 Linux:
 ```
-./build.sh -n -t linux-x64-static
+./build.sh -n linux-x64-static
 ```
