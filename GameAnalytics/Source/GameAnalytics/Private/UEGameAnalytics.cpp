@@ -218,7 +218,7 @@ FAnalyticsProviderGameAnalytics::~FAnalyticsProviderGameAnalytics()
 {
     if (bHasSessionStarted)
     {
-#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+#if WITH_EDITOR && !TEST_NON_EDITOR_PLUGIN_ANALYTICS_MODE
         // Empty
 #elif PLATFORM_MAC || PLATFORM_WINDOWS || PLATFORM_LINUX
         gameanalytics::GameAnalytics::onQuit();
@@ -233,8 +233,8 @@ bool FAnalyticsProviderGameAnalytics::StartSession(const TArray<FAnalyticsEventA
     UGameAnalytics::logGAStateInfo(TEXT("FAnalyticsProviderGameAnalytics::StartSession"));
     if(!bHasSessionStarted)
     {
-        UE_LOG(LogGameAnalyticsPlugin, Verbose, TEXT("TEST_NON_EDITOR_ANALYTICS_MODE = %d"), TEST_NON_EDITOR_ANALYTICS_MODE);
-#if WITH_EDITOR && TEST_NON_EDITOR_ANALYTICS_MODE
+        UE_LOG(LogGameAnalyticsPlugin, Verbose, TEXT("TEST_NON_EDITOR_PLUGIN_ANALYTICS_MODE = %d"), TEST_NON_EDITOR_PLUGIN_ANALYTICS_MODE);
+#if WITH_EDITOR && TEST_NON_EDITOR_PLUGIN_ANALYTICS_MODE
         UGameAnalytics::setThreadAndEventTimers(0.1, 0.05);
 #endif
         ProjectSettings = FAnalyticsGameAnalytics::LoadProjectSettings();
@@ -442,7 +442,7 @@ void FAnalyticsProviderGameAnalytics::EndSession()
         }
         else
         {
-#if WITH_EDITOR && !TEST_NON_EDITOR_ANALYTICS_MODE
+#if WITH_EDITOR && !TEST_NON_EDITOR_PLUGIN_ANALYTICS_MODE
             // Empty
 #elif PLATFORM_MAC || PLATFORM_WINDOWS || PLATFORM_LINUX
             gameanalytics::GameAnalytics::onSuspend();
@@ -454,7 +454,7 @@ void FAnalyticsProviderGameAnalytics::EndSession()
         }
     }
 
-#if WITH_EDITOR && TEST_NON_EDITOR_ANALYTICS_MODE
+#if WITH_EDITOR && TEST_NON_EDITOR_PLUGIN_ANALYTICS_MODE
     UE_LOG(LogGameAnalyticsPlugin, Verbose, TEXT("waitUntilJobsAreDone"));
     UGameAnalytics::waitUntilJobsAreDone();
 #endif

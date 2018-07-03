@@ -54,7 +54,7 @@ enum class EGAGender : uint8
 
 
 UCLASS()
-class GAMEANALYTICS_API UGameAnalytics : public UObject 
+class GAMEANALYTICS_API UGameAnalytics : public UObject
 {
     GENERATED_UCLASS_BODY()
 
@@ -63,17 +63,17 @@ public:
 	static void configureAvailableCustomDimensions01(const std::vector<std::string>& list);
 	static void configureAvailableCustomDimensions02(const std::vector<std::string>& list);
 	static void configureAvailableCustomDimensions03(const std::vector<std::string>& list);
-		    
+
 	static void configureAvailableResourceCurrencies(const std::vector<std::string>& list);
 	static void configureAvailableResourceItemTypes(const std::vector<std::string>& list);
-		    
+
 	static void configureBuild(const char *build);
 	static void configureUserId(const char *userId);
 	static void configureSdkGameEngineVersion(const char *gameEngineSdkVersion);
 	static void configureGameEngineVersion(const char *gameEngineVersion);
-	static void configureWritablePath(const std::string& writablePath);
+	static void configureWritablePath(const char *writablePath);
 	static void initialize(const char *gameKey, const char *gameSecret);
-	    
+
 #if PLATFORM_IOS
 	static void addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *receipt);
 	static void addBusinessEventAndAutoFetchReceipt(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType);
@@ -91,7 +91,7 @@ public:
 	static void addDesignEvent(const char *eventId);
 	static void addDesignEvent(const char *eventId, float value);
 	static void addErrorEvent(EGAErrorSeverity severity, const char *message);
-		    
+
 	static void setEnabledInfoLog(bool flag);
 	static void setEnabledVerboseLog(bool flag);
     static void setEnabledManualSessionHandling(bool flag);
@@ -101,7 +101,7 @@ public:
 	static void setFacebookId(const char *facebookId);
 	static void setGender(EGAGender gender);
 	static void setBirthYear(int birthYear);
-            
+
     static void startSession();
     static void endSession();
 
