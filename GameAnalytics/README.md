@@ -26,6 +26,6 @@ Windows:
 ```
 
 Linux:
-```
-./build.sh -n linux-x64-static
+```sh
+./build.sh -n -t linux-x64-clang-static
 ```
