@@ -10,9 +10,9 @@ For UWP support check out the [master_uwp](https://github.com/GameAnalytics/GA-S
 >
 > Requirements:
 > * **Unreal Engine:** 4.15+  &nbsp;
-> * **iOS:** iOS 7+ &nbsp; 
+> * **iOS:** iOS 7+ &nbsp;
 > * **Android:** Android API Level 14 &nbsp;
-> * **Windows:** Minimum specs for UE4 &nbsp; 
+> * **Windows:** Minimum specs for UE4 &nbsp;
 > * **Mac:** Minimum specs for UE4 &nbsp;    
 >   
 > **Build size:**   
@@ -29,6 +29,22 @@ For UWP support check out the [master_uwp](https://github.com/GameAnalytics/GA-S
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**2.6.27**
+* fixed android crash
+
+**2.6.26**
+* fixed compile errors
+
+**2.6.19**
+* compile fixes for android (android)
+* updated to be compatible with unreal engine v4.20
+
+**2.6.18**
+* various bug fixes
+
+**2.6.17**
+* fixes building for linux (linux)
+
 **2.6.16**
 * added custom dimensions to design error events
 * added option to startsession with gamekey and secretkey instead of getting keys from settings object

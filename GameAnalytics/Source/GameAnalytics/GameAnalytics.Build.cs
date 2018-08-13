@@ -34,6 +34,7 @@ namespace UnrealBuildTool.Rules
 
                 case UnrealTargetPlatform.Android:
                     PrivateDependencyModuleNames.Add("Launch");
+                    PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Private/Android"));
                     break;
 
                 case UnrealTargetPlatform.Mac:
@@ -46,19 +47,19 @@ namespace UnrealBuildTool.Rules
                             "CoreServices"
                         }
                     );
-                    PrivateDependencyModuleNames.AddRange(new string[] {  "OpenSSL"});
+                    PrivateDependencyModuleNames.AddRange(new string[] { "OpenSSL" });
                     break;
 
                 case UnrealTargetPlatform.Linux:
                     LoadLibrary(Path.Combine(libPath, "linux"), "libGameAnalytics.a");
                     //PublicAdditionalLibraries.Add(Path.Combine(libPath, "linux", "libGameAnalytics.a"));
                     //RuntimeDependencies.Add(Path.Combine(libPath, "linux", "libGameAnalytics.a"));
-                    PublicAdditionalLibraries.Add("curl");
-                    PrivateDependencyModuleNames.AddRange(new string[] {  "OpenSSL"});
+                    PrivateDependencyModuleNames.AddRange(new string[] { "OpenSSL", "libcurl" });
                     break;
 
                 case UnrealTargetPlatform.IOS:
                     PublicAdditionalLibraries.Add(Path.Combine(libPath, "ios", "libGameAnalytics.a"));
+                    PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Private/IOS"));
                     PublicFrameworks.AddRange(
                         new string[] {
                             "AdSupport",
@@ -138,17 +139,7 @@ namespace UnrealBuildTool.Rules
 
             if (Target.Platform == UnrealTargetPlatform.Android)
             {
-#if UE_4_18_OR_LATER
-                string PluginPath = Utils.MakePathRelativeTo(ModuleDirectory, Target.RelativeEnginePath);
-#else
-                string PluginPath = Utils.MakePathRelativeTo(ModuleDirectory, BuildConfiguration.RelativeEnginePath);
-#endif
-
-#if UE_4_19_OR_LATER
-                RuntimeDependencies.Add(Path.Combine(PluginPath, "GameAnalytics_APL.xml"));
-#else
-                AdditionalPropertiesForReceipt.Add(new ReceiptProperty("AndroidPlugin", Path.Combine(PluginPath, "GameAnalytics_APL.xml")));
-#endif
+                AdditionalPropertiesForReceipt.Add("AndroidPlugin", Path.Combine(ModuleDirectory, "GameAnalytics_APL.xml"));
             }
         }
 
