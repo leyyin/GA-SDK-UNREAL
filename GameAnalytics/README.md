@@ -23,6 +23,11 @@ Windows:
 ```sh
 ./build.sh -n -t win64-vc140-static
 ./build.sh -n -t win32-vc140-static
+
+OR
+
+./build_win_py2.sh -n -t win64-vc140-static
+./build_win_py2.sh -n -t win32-vc140-static
 ```
 
 Linux:

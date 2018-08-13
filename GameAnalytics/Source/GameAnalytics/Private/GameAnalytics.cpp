@@ -1,4 +1,5 @@
 #include "GameAnalytics.h"
+#include "UEGameAnalytics.h"
 
 #if PLATFORM_IOS
 #include "../GA-SDK-IOS/GameAnalyticsCpp.h"
@@ -17,8 +18,6 @@
 #include "Json.h"
 #include "../GA-SDK-HTML5/GameAnalytics.h"
 #endif
-
-DEFINE_LOG_CATEGORY(LogGameAnalyticsPlugin);
 
 UGameAnalytics::UGameAnalytics(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -641,7 +640,7 @@ void UGameAnalytics::logGAStateInfo(const TCHAR* Context)
 	// Empty
 #else
 	// Must be on the same thread so that we can log in the proper order
-	UE_LOG(LogGameAnalyticsPlugin, Verbose, TEXT("Called UGameAnalytics::logGAStateInfo (outside of thread) with Context = `%s`"), Context);
+	UE_LOG(LogGameAnalyticsAnalytics, Verbose, TEXT("Called UGameAnalytics::logGAStateInfo (outside of thread) with Context = `%s`"), Context);
 	gameanalytics::threading::GAThreading::performTaskOnGAThread([Context]()
 	{
 		const bool bIsInitialized = gameanalytics::state::GAState::isInitialized();
@@ -649,12 +648,12 @@ void UGameAnalytics::logGAStateInfo(const TCHAR* Context)
 		const bool bIsSessionStarted = gameanalytics::state::GAState::sessionIsStarted();
 		const double MainThreadWaitInSeconds = gameanalytics::threading::GAThreading::GetThreadWaitSeconds();
 		const double ProcessEventsIntervalInSeconds = gameanalytics::events::GAEvents::GetEventsPollIntervalSeconds();
-		UE_LOG(LogGameAnalyticsPlugin, Verbose, TEXT("%s"), Context);
-		UE_LOG(LogGameAnalyticsPlugin,
+		UE_LOG(LogGameAnalyticsAnalytics, Verbose, TEXT("%s"), Context);
+		UE_LOG(LogGameAnalyticsAnalytics,
 			Verbose,
 			TEXT("UGameAnalytics::logGAStateInfo: GAState::isInitialized = %d, GAState::isEnabled = %d, GAState::sessionIsStarted = %d, MainThreadWaitInSeconds = %f, ProcessEventsIntervalInSeconds = %f "),
 			bIsInitialized, bIsEnabled, bIsSessionStarted, MainThreadWaitInSeconds, ProcessEventsIntervalInSeconds);
-		UE_LOG(LogGameAnalyticsPlugin, Verbose, TEXT(""));
+		UE_LOG(LogGameAnalyticsAnalytics, Verbose, TEXT(""));
 	});
 #endif
 }

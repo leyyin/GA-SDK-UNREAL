@@ -15,7 +15,7 @@
 
 #define GA_VERSION TEXT("2.6.16")
 
-DEFINE_LOG_CATEGORY_STATIC(LogGameAnalyticsAnalytics, Display, All);
+DEFINE_LOG_CATEGORY(LogGameAnalyticsAnalytics)
 
 IMPLEMENT_MODULE(FAnalyticsGameAnalytics, GameAnalytics)
 
@@ -230,10 +230,10 @@ FAnalyticsProviderGameAnalytics::~FAnalyticsProviderGameAnalytics()
 
 bool FAnalyticsProviderGameAnalytics::StartSession(const TArray<FAnalyticsEventAttribute>& Attributes)
 {
-    UGameAnalytics::logGAStateInfo(TEXT("FAnalyticsProviderGameAnalytics::StartSession"));
-    if(!bHasSessionStarted)
+    //UGameAnalytics::logGAStateInfo(TEXT("FAnalyticsProviderGameAnalytics::StartSession"));
+    if (!bHasSessionStarted)
     {
-        UE_LOG(LogGameAnalyticsPlugin, Verbose, TEXT("TEST_NON_EDITOR_PLUGIN_ANALYTICS_MODE = %d"), TEST_NON_EDITOR_PLUGIN_ANALYTICS_MODE);
+        UE_LOG(LogGameAnalyticsAnalytics, Verbose, TEXT("TEST_NON_EDITOR_PLUGIN_ANALYTICS_MODE = %d"), TEST_NON_EDITOR_PLUGIN_ANALYTICS_MODE);
 #if WITH_EDITOR && TEST_NON_EDITOR_PLUGIN_ANALYTICS_MODE
         UGameAnalytics::setThreadAndEventTimers(0.1, 0.05);
 #endif
@@ -252,25 +252,31 @@ bool FAnalyticsProviderGameAnalytics::StartSession(const TArray<FAnalyticsEventA
         UGameAnalytics::setEnabledVerboseLog(ProjectSettings.VerboseLogBuild);
 
         ////// Configure engine version
-        FString EngineVersionString = FString::Printf(TEXT("unreal %d.%d.%d"), FEngineVersion::Current().GetMajor(), FEngineVersion::Current().GetMinor(), FEngineVersion::Current().GetPatch());
-        UGameAnalytics::configureGameEngineVersion(TCHAR_TO_ANSI(*EngineVersionString));
-        FString SdkVersionString = FString::Printf(TEXT("unreal %s"), GA_VERSION);
+        const FString EngineVersionString = FString::Printf(TEXT("unreal %d.%d.%d"), FEngineVersion::Current().GetMajor(), FEngineVersion::Current().GetMinor(), FEngineVersion::Current().GetPatch());
+        UE_LOG(LogGameAnalyticsAnalytics, Verbose, TEXT("EngineVersionString = %s"), *EngineVersionString);
+		UGameAnalytics::configureGameEngineVersion(TCHAR_TO_ANSI(*EngineVersionString));
+
+        const FString SdkVersionString = FString::Printf(TEXT("unreal %s"), GA_VERSION);
+        UE_LOG(LogGameAnalyticsAnalytics, Verbose, TEXT("SdkVersionString = %s"), *SdkVersionString);
         UGameAnalytics::configureSdkGameEngineVersion(TCHAR_TO_ANSI(*SdkVersionString));
 
         //// Configure build version
+        FString BuildString;
 #if PLATFORM_IOS
-        UGameAnalytics::configureBuild(TCHAR_TO_ANSI(*ProjectSettings.IosBuild));
+        BuildString = ProjectSettings.IosBuild;
 #elif PLATFORM_ANDROID
-        UGameAnalytics::configureBuild(TCHAR_TO_ANSI(*ProjectSettings.AndroidBuild));
+        BuildString = ProjectSettings.AndroidBuild;
 #elif PLATFORM_MAC
-        UGameAnalytics::configureBuild(TCHAR_TO_ANSI(*ProjectSettings.MacBuild));
+        BuildString = ProjectSettings.MacBuild;
 #elif PLATFORM_WINDOWS
-        UGameAnalytics::configureBuild(TCHAR_TO_ANSI(*ProjectSettings.WindowsBuild));
+        BuildString = ProjectSettings.WindowsBuild;
 #elif PLATFORM_LINUX
-        UGameAnalytics::configureBuild(TCHAR_TO_ANSI(*ProjectSettings.LinuxBuild));
+        BuildString = ProjectSettings.LinuxBuild;
 #elif PLATFORM_HTML5
-        UGameAnalytics::configureBuild(TCHAR_TO_ANSI(*ProjectSettings.Html5Build));
+        BuildString = ProjectSettings.Html5Build;
 #endif
+        UE_LOG(LogGameAnalyticsAnalytics, Verbose, TEXT("BuildString = %s"), *BuildString);
+        UGameAnalytics::configureBuild(TCHAR_TO_ANSI(*BuildString));
 
         ////// Configure available virtual currencies and item types
         if (ProjectSettings.ResourceCurrencies.Num() > 0)
@@ -420,8 +426,9 @@ bool FAnalyticsProviderGameAnalytics::StartSession(const TArray<FAnalyticsEventA
 
         ////// Initialize (also calls startNewSession)
         UGameAnalytics::initialize(TCHAR_TO_ANSI(*gameKey), TCHAR_TO_ANSI(*secretKey));
-        UGameAnalytics::logGAStateInfo(TEXT("FAnalyticsProviderGameAnalytics::StartSession AFTER UGameAnalytics::initialize"));
+        //UGameAnalytics::logGAStateInfo(TEXT("FAnalyticsProviderGameAnalytics::StartSession AFTER UGameAnalytics::initialize"));
         bHasSessionStarted = true;
+
     }
     else if (ProjectSettings.UseManualSessionHandling)
     {
@@ -435,7 +442,7 @@ void FAnalyticsProviderGameAnalytics::EndSession()
 {
     if (bHasSessionStarted)
     {
-        UGameAnalytics::logGAStateInfo(TEXT("FAnalyticsProviderGameAnalytics::EndSession"));
+        //UGameAnalytics::logGAStateInfo(TEXT("FAnalyticsProviderGameAnalytics::EndSession"));
         if(ProjectSettings.UseManualSessionHandling)
         {
             UGameAnalytics::endSession();
@@ -455,7 +462,7 @@ void FAnalyticsProviderGameAnalytics::EndSession()
     }
 
 #if WITH_EDITOR && TEST_NON_EDITOR_PLUGIN_ANALYTICS_MODE
-    UE_LOG(LogGameAnalyticsPlugin, Verbose, TEXT("waitUntilJobsAreDone"));
+    UE_LOG(LogGameAnalyticsAnalytics, Verbose, TEXT("waitUntilJobsAreDone"));
     UGameAnalytics::waitUntilJobsAreDone();
 #endif
 }

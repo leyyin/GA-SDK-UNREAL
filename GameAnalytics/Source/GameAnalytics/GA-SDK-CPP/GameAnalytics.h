@@ -9,7 +9,7 @@
 #include <vector>
 
 #if PLATFORM_LINUX
-using STRING = const char*;
+using STRING = const std::string&;
 #else
 using STRING = const std::string&;
 #endif

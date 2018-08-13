@@ -12,6 +12,8 @@
 
 DECLARE_DELEGATE_RetVal(const FString&, FGameAnalyticsBuildOverride);
 
+DECLARE_LOG_CATEGORY_EXTERN(LogGameAnalyticsAnalytics, All, All)
+
 class IAnalyticsProvider;
 
 /**

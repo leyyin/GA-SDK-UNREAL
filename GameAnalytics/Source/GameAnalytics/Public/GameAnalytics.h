@@ -14,8 +14,6 @@
 #include "GameAnalytics.generated.h"
 
 
-DECLARE_LOG_CATEGORY_EXTERN(LogGameAnalyticsPlugin, All, All);
-
 UENUM()
 enum class EGAResourceFlowType : uint8
 {

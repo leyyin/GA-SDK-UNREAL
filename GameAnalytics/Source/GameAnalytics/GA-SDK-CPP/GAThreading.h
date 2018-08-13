@@ -25,13 +25,13 @@ namespace gameanalytics
             static void scheduleTimer(double interval, const Block& callback);
             static void endThread();
 
-			// Does this have any jobs left to process?
-			static bool HasJobs();
+            // Does this have any jobs left to process?
+            static bool HasJobs();
 
-			static bool IsThreadRunning();
+            static bool IsThreadRunning();
 
-			static double GetThreadWaitSeconds();
-			static void SetThreadWaitSeconds(double NewInterval);
+            static double GetThreadWaitSeconds();
+            static void SetThreadWaitSeconds(double NewInterval);
         };
     }
 }
