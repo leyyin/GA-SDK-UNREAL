@@ -2,8 +2,9 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "EngineMinimal.h"
 #include "UObject/UObjectGlobals.h"
+#include "UObject/Class.h"
 #include "Interfaces/IAnalyticsProviderModule.h"
 
 class FAnalyticsProviderGameAnalytics :

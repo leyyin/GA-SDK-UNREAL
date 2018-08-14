@@ -11,6 +11,7 @@
 #include "../GA-SDK-HTML5/GameAnalytics.h"
 #endif
 
+#include "Misc/ConfigCacheIni.h"
 #include "Misc/EngineVersion.h"
 
 #define GA_VERSION TEXT("2.6.27")

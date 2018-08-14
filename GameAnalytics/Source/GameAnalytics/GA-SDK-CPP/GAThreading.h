@@ -7,7 +7,6 @@
 
 
 #include <functional>
-#include "Foundation/GAThreadHelpers.h"
 #include <vector>
 #include <chrono>
 #include <memory>
@@ -21,8 +20,8 @@ namespace gameanalytics
          public:
             typedef std::function<void()> Block;
             static void performTaskOnGAThread(const Block& taskBlock);
+
             // timers
-            static void scheduleTimer(double interval, const Block& callback);
             static void endThread();
 
             // Does this have any jobs left to process?

@@ -302,13 +302,8 @@ void UGameAnalytics::addBusinessEventAndAutoFetchReceipt(const char *currency, i
 #elif PLATFORM_ANDROID
 void UGameAnalytics::addBusinessEvent(const char *currency, int amount, const char *itemType, const char *itemId, const char *cartType, const char *receipt, const char *signature)
 {
-<<<<<<< HEAD
 #if !WITH_EDITOR || TEST_NON_EDITOR_PLUGIN_ANALYTICS_MODE
     gameanalytics::jni_addBusinessEventWithReceipt(currency, amount, itemType, itemId, cartType, receipt, "google_play", signature, "");
-=======
-#if !WITH_EDITOR
-    gameanalytics::jni_addBusinessEventWithReceipt(currency, amount, itemType, itemId, cartType, receipt, "google_play", signature, "");
->>>>>>> 05ca60595ff1d552f5092b646e595c42dfe645fb
 #endif
 }
 #endif
