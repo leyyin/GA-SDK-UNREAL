@@ -1,4 +1,5 @@
 #include "UEGameAnalytics.h"
+#include "Misc/ConfigCacheIni.h"
 #include "Interfaces/IAnalyticsProvider.h"
 #include "GameAnalyticsProvider.h"
 #include "GameAnalytics.h"
@@ -14,7 +15,7 @@
 #include "Misc/ConfigCacheIni.h"
 #include "Misc/EngineVersion.h"
 
-#define GA_VERSION TEXT("2.6.27")
+#define GA_VERSION TEXT("2.6.28")
 
 DEFINE_LOG_CATEGORY(LogGameAnalyticsAnalytics)
 
