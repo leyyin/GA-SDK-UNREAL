@@ -5,8 +5,6 @@ Modified CPP SDK: https://github.com/leyyin/GA-SDK-CPP
 Modified UNREAL SDK: https://github.com/leyyin/GA-SDK-UNREAL
 
 
-Version `2.6.15`
-
 Copied manually from https://github.com/GameAnalytics/GA-SDK-UNREAL
 because it is the latest version and also on linux we do not have a marketplace.
 
