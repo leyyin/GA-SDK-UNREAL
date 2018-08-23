@@ -43,7 +43,7 @@ namespace UnrealBuildTool.Rules
                     PublicFrameworks.AddRange(
                         new string[] {
                             "CoreFoundation",
-                            "Foundation",
+                            "Foundation", 
                             "CoreServices"
                         }
                     );

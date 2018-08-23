@@ -52,87 +52,94 @@ TSharedPtr<IAnalyticsProvider> FAnalyticsGameAnalytics::CreateAnalyticsProvider(
 FAnalyticsGameAnalytics::FGameAnalyticsProjectSettings FAnalyticsGameAnalytics::LoadProjectSettings()
 {
     FGameAnalyticsProjectSettings Settings;
-
     if (!GConfig)
     {
         return Settings;
     }
 
+	const FString Section = TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings");
     const bool bUseBuildOverride = BuildOverride.IsBound();
-    if (!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("AndroidGameKey"), Settings.AndroidGameKey, GetIniName()))
+
+	// Windows
+    if (!GConfig->GetString(*Section, TEXT("AndroidGameKey"), Settings.AndroidGameKey, GetIniName()))
     {
         Settings.AndroidGameKey = "";
     }
-    if (!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("AndroidSecretKey"), Settings.AndroidSecretKey, GetIniName()))
+    if (!GConfig->GetString(*Section, TEXT("AndroidSecretKey"), Settings.AndroidSecretKey, GetIniName()))
     {
         Settings.AndroidSecretKey = "";
     }
-    if (!bUseBuildOverride && !GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("AndroidBuild"), Settings.AndroidBuild, GetIniName()))
+    if (!bUseBuildOverride && !GConfig->GetString(*Section, TEXT("AndroidBuild"), Settings.AndroidBuild, GetIniName()))
     {
         Settings.AndroidBuild = "0.1";
     }
 
-    if (!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("IosGameKey"), Settings.IosGameKey, GetIniName()))
+	// IOS
+    if (!GConfig->GetString(*Section, TEXT("IosGameKey"), Settings.IosGameKey, GetIniName()))
     {
         Settings.IosGameKey = "";
     }
-    if (!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("IosSecretKey"), Settings.IosSecretKey, GetIniName()))
+    if (!GConfig->GetString(*Section, TEXT("IosSecretKey"), Settings.IosSecretKey, GetIniName()))
     {
         Settings.IosSecretKey = "";
     }
-    if (!bUseBuildOverride && !GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("IosBuild"), Settings.IosBuild, GetIniName()))
+    if (!bUseBuildOverride && !GConfig->GetString(*Section, TEXT("IosBuild"), Settings.IosBuild, GetIniName()))
     {
         Settings.IosBuild = "0.1";
     }
 
-    if (!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("MacGameKey"), Settings.MacGameKey, GetIniName()))
+	// Mac
+    if (!GConfig->GetString(*Section, TEXT("MacGameKey"), Settings.MacGameKey, GetIniName()))
     {
         Settings.MacGameKey = "";
     }
-    if (!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("MacSecretKey"), Settings.MacSecretKey, GetIniName()))
+    if (!GConfig->GetString(*Section, TEXT("MacSecretKey"), Settings.MacSecretKey, GetIniName()))
     {
         Settings.MacSecretKey = "";
     }
-    if (!bUseBuildOverride && !GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("MacBuild"), Settings.MacBuild, GetIniName()))
+    if (!bUseBuildOverride && !GConfig->GetString(*Section, TEXT("MacBuild"), Settings.MacBuild, GetIniName()))
     {
         Settings.MacBuild = "0.1";
     }
 
-    if (!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("WindowsGameKey"), Settings.WindowsGameKey, GetIniName()))
+	// Windows
+    if (!GConfig->GetString(*Section, TEXT("WindowsGameKey"), Settings.WindowsGameKey, GetIniName()))
     {
         Settings.WindowsGameKey = "";
     }
-    if (!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("WindowsSecretKey"), Settings.WindowsSecretKey, GetIniName()))
+    if (!GConfig->GetString(*Section, TEXT("WindowsSecretKey"), Settings.WindowsSecretKey, GetIniName()))
     {
         Settings.WindowsSecretKey = "";
     }
-    if (!bUseBuildOverride && !GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("WindowsBuild"), Settings.WindowsBuild, GetIniName()))
+    if (!bUseBuildOverride && !GConfig->GetString(*Section, TEXT("WindowsBuild"), Settings.WindowsBuild, GetIniName()))
     {
         Settings.WindowsBuild = "0.1";
     }
 
-    if (!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("LinuxGameKey"), Settings.LinuxGameKey, GetIniName()))
+	// Linux
+    if (!GConfig->GetString(*Section, TEXT("LinuxGameKey"), Settings.LinuxGameKey, GetIniName()))
     {
         Settings.LinuxGameKey = "";
     }
-    if (!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("LinuxSecretKey"), Settings.LinuxSecretKey, GetIniName()))
+    if (!GConfig->GetString(*Section, TEXT("LinuxSecretKey"), Settings.LinuxSecretKey, GetIniName()))
     {
         Settings.LinuxSecretKey = "";
     }
-    if (!bUseBuildOverride && !GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("LinuxBuild"), Settings.LinuxBuild, GetIniName()))
+    if (!bUseBuildOverride && !GConfig->GetString(*Section, TEXT("LinuxBuild"), Settings.LinuxBuild, GetIniName()))
     {
         Settings.LinuxBuild = "0.1";
     }
 
-    if (!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("Html5GameKey"), Settings.Html5GameKey, GetIniName()))
+	// HTML5
+    if (!GConfig->GetString(*Section, TEXT("Html5GameKey"), Settings.Html5GameKey, GetIniName()))
     {
         Settings.Html5GameKey = "";
     }
-    if (!GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("Html5SecretKey"), Settings.Html5SecretKey, GetIniName()))
+    if (!GConfig->GetString(*Section, TEXT("Html5SecretKey"), Settings.Html5SecretKey, GetIniName()))
     {
         Settings.Html5SecretKey = "";
     }
-    if (!bUseBuildOverride && !GConfig->GetString(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("Html5Build"), Settings.Html5Build, GetIniName()))
+    if (!bUseBuildOverride && !GConfig->GetString(*Section, TEXT("Html5Build"), Settings.Html5Build, GetIniName()))
     {
         Settings.Html5Build = "0.1";
     }
@@ -149,24 +156,24 @@ FAnalyticsGameAnalytics::FGameAnalyticsProjectSettings FAnalyticsGameAnalytics::
         Settings.Html5Build = BuildVersion;
     }
 
-    if (!GConfig->GetBool(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("UseManualSessionHandling"), Settings.UseManualSessionHandling, GetIniName()))
+    if (!GConfig->GetBool(*Section, TEXT("UseManualSessionHandling"), Settings.UseManualSessionHandling, GetIniName()))
     {
         Settings.UseManualSessionHandling = false;
     }
-    if (!GConfig->GetBool(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("InfoLogBuild"), Settings.InfoLogBuild, GetIniName()))
+    if (!GConfig->GetBool(*Section, TEXT("InfoLogBuild"), Settings.InfoLogBuild, GetIniName()))
     {
         Settings.InfoLogBuild = true;
     }
-    if (!GConfig->GetBool(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("VerboseLogBuild"), Settings.VerboseLogBuild, GetIniName()))
+    if (!GConfig->GetBool(*Section, TEXT("VerboseLogBuild"), Settings.VerboseLogBuild, GetIniName()))
     {
         Settings.VerboseLogBuild = false;
     }
 
-    GConfig->GetArray(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("+CustomDimensions01"), Settings.CustomDimensions01, GetIniName());
-    GConfig->GetArray(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("+CustomDimensions02"), Settings.CustomDimensions02, GetIniName());
-    GConfig->GetArray(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("+CustomDimensions03"), Settings.CustomDimensions03, GetIniName());
-    GConfig->GetArray(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("+ResourceCurrencies"), Settings.ResourceCurrencies, GetIniName());
-    GConfig->GetArray(TEXT("/Script/GameAnalyticsEditor.GameAnalyticsProjectSettings"), TEXT("+ResourceItemTypes"), Settings.ResourceItemTypes, GetIniName());
+    GConfig->GetArray(*Section, TEXT("+CustomDimensions01"), Settings.CustomDimensions01, GetIniName());
+    GConfig->GetArray(*Section, TEXT("+CustomDimensions02"), Settings.CustomDimensions02, GetIniName());
+    GConfig->GetArray(*Section, TEXT("+CustomDimensions03"), Settings.CustomDimensions03, GetIniName());
+    GConfig->GetArray(*Section, TEXT("+ResourceCurrencies"), Settings.ResourceCurrencies, GetIniName());
+    GConfig->GetArray(*Section, TEXT("+ResourceItemTypes"), Settings.ResourceItemTypes, GetIniName());
 
     return Settings;
 }
