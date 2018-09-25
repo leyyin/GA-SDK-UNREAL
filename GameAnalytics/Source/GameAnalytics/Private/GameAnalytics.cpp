@@ -683,7 +683,7 @@ void UGameAnalytics::waitUntilJobsAreDone()
 			// Thread isn't even running anymore, what are you waiting for? get outta here kid
 			break;
 		}
-		FPlatformProcess::Sleep(0.5);
+		FPlatformProcess::Sleep(0.25f);
 	}
 #endif
 }

@@ -161,11 +161,31 @@ FAnalyticsGameAnalytics::FGameAnalyticsProjectSettings FAnalyticsGameAnalytics::
     {
         Settings.UseManualSessionHandling = false;
     }
-    if (!GConfig->GetBool(*Section, TEXT("InfoLogBuild"), Settings.InfoLogBuild, GetIniName()))
+
+	// InfoLogBuild
+	if (FParse::Param(FCommandLine::Get(), TEXT("GAInfoLogBuild")))
+	{
+		Settings.InfoLogBuild = true;
+	}
+	else if (FParse::Param(FCommandLine::Get(), TEXT("GANoInfoLogBuild")))
+	{
+		Settings.InfoLogBuild = false;
+	}
+    else if (!GConfig->GetBool(*Section, TEXT("InfoLogBuild"), Settings.InfoLogBuild, GetIniName()))
     {
         Settings.InfoLogBuild = true;
     }
-    if (!GConfig->GetBool(*Section, TEXT("VerboseLogBuild"), Settings.VerboseLogBuild, GetIniName()))
+
+	// VerboseLogBuild
+	if (FParse::Param(FCommandLine::Get(), TEXT("GAVerboseLogBuild")))
+	{
+		Settings.VerboseLogBuild = true;
+	}
+	else if (FParse::Param(FCommandLine::Get(), TEXT("GANoVerboseLogBuild")))
+	{
+		Settings.VerboseLogBuild = false;
+	}
+	else if (!GConfig->GetBool(*Section, TEXT("VerboseLogBuild"), Settings.VerboseLogBuild, GetIniName()))
     {
         Settings.VerboseLogBuild = false;
     }
