@@ -29,6 +29,19 @@ For UWP support check out the [master_uwp](https://github.com/GameAnalytics/GA-S
 Changelog
 ---------
 <!--(CHANGELOG_TOP)-->
+**3.0.3**
+* fixed shutdown bugs for desktop platforms
+
+**3.0.2**
+* fixed thread hanging on shutdown for desktop platforms
+
+**3.0.1**
+* fixed compile errors
+
+**3.0.0**
+* added command center functionality
+* added gameanalytics blueprint functions
+
 **2.6.28**
 * fixed more compile errors for mac
 
