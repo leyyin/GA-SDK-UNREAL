@@ -246,7 +246,7 @@ FAnalyticsProviderGameAnalytics::FAnalyticsProviderGameAnalytics() :
 
 FAnalyticsProviderGameAnalytics::~FAnalyticsProviderGameAnalytics()
 {
-    UE_LOG(LogGameAnalyticsAnalytics, Display, TEXT("FAnalyticsGameAnalytics ~FAnalyticsProviderGameAnalytics"));
+    //UE_LOG(LogGameAnalyticsAnalytics, Display, TEXT("FAnalyticsGameAnalytics ~FAnalyticsProviderGameAnalytics"));
     if (bHasSessionStarted)
     {
 #if WITH_EDITOR && !TEST_NON_EDITOR_PLUGIN_ANALYTICS_MODE
@@ -254,11 +254,9 @@ FAnalyticsProviderGameAnalytics::~FAnalyticsProviderGameAnalytics()
 #elif PLATFORM_MAC || PLATFORM_WINDOWS || PLATFORM_LINUX
         gameanalytics::GameAnalytics::onQuit();
 #else
-        if (bHasSessionStarted)
-        {
-            EndSession();
-        }
+		EndSession();
 #endif
+	}
 }
 
 bool FAnalyticsProviderGameAnalytics::StartSession(const TArray<FAnalyticsEventAttribute>& Attributes)
@@ -272,7 +270,8 @@ bool FAnalyticsProviderGameAnalytics::StartSession(const TArray<FAnalyticsEventA
 #endif
         ProjectSettings = FAnalyticsGameAnalytics::LoadProjectSettings();
 
-#if WITH_EDITOR
+#if WITH_EDITOR && !TEST_NON_EDITOR_PLUGIN_ANALYTICS_MODE
+	// Empty
 #elif PLATFORM_MAC || PLATFORM_WINDOWS || PLATFORM_LINUX
 #if ENGINE_MAJOR_VERSION >= 4 && ENGINE_MINOR_VERSION >= 18
         UGameAnalytics::configureWritablePath(TCHAR_TO_ANSI(*FPaths::ProjectSavedDir()));
